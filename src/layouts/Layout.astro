@@ -1,0 +1,57 @@
+---
+import "../styles/global.css";
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const {
+	title,
+	description = "Servicio Técnico Lux Max. Expertos en reparación de lavadoras, secadoras y cocinas en La Serena y Coquimbo. Atención en 24 horas.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" class="scroll-smooth">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content={description} />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+
+		<!-- Google Fonts: Inter -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+			rel="stylesheet"
+		/>
+
+		<title>{title}</title>
+
+		<!-- JSON-LD LocalBusiness -->
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@type": "LocalBusiness",
+				"name": "Servicio Técnico Lux Max",
+				"image": "https://luxmax.cl/logo.png",
+				"telephone": "+56967140558",
+				"email": "contacto@luxmax.cl",
+				"address": {
+					"@type": "PostalAddress",
+					"addressLocality": "La Serena",
+					"addressRegion": "Coquimbo",
+					"addressCountry": "CL"
+				},
+				"areaServed": ["La Serena", "Coquimbo", "Ovalle", "Tongoy"],
+				"priceRange": "$$"
+			}
+		</script>
+	</head>
+	<body class="font-sans antialiased text-gray-800 bg-white">
+		<slot />
+	</body>
+</html>

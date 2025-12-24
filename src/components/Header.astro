@@ -1,0 +1,245 @@
+---
+
+---
+
+<header
+    class="fixed top-4 left-0 right-0 z-50 transition-all duration-300 px-4"
+    id="main-header"
+>
+    <div class="container mx-auto max-w-6xl">
+        <div
+            class="bg-white/80 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl px-6 h-20 flex items-center justify-between relative z-50"
+        >
+            <!-- Logo -->
+            <a href="/" class="flex items-center gap-3 group relative z-50">
+                <img
+                    src="/logo.svg"
+                    alt="Lux Max Logo"
+                    class="h-12 w-auto group-hover:scale-105 transition-transform duration-300"
+                />
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center gap-8">
+                {
+                    ["Inicio", "Servicios", "Marcas", "Contacto"].map(
+                        (item) => (
+                            <a
+                                href={`#${item.toLowerCase()}`}
+                                class="nav-link font-medium text-slate-600 hover:text-blue-700 relative py-2"
+                            >
+                                {item}
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full" />
+                            </a>
+                        ),
+                    )
+                }
+            </nav>
+
+            <!-- Desktop CTA -->
+            <div class="hidden md:flex items-center gap-4">
+                <a
+                    href="tel:+56967140558"
+                    class="magnetic-btn bg-slate-900 text-white font-bold py-3 px-6 rounded-xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/20 flex items-center gap-2"
+                >
+                    <span>📞</span> 9 6714 0558
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button
+                id="menu-toggle"
+                class="md:hidden relative z-50 w-12 h-12 flex items-center justify-center bg-slate-100 rounded-full text-slate-900"
+            >
+                <div class="flex flex-col gap-1.5 hamburger-icon">
+                    <span
+                        class="w-6 h-0.5 bg-current transition-all duration-300 origin-center"
+                    ></span>
+                    <span
+                        class="w-6 h-0.5 bg-current transition-all duration-300 origin-center"
+                    ></span>
+                    <span
+                        class="w-6 h-0.5 bg-current transition-all duration-300 origin-center"
+                    ></span>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Full Screen Menu -->
+    <div
+        id="mobile-menu"
+        class="fixed inset-0 bg-gradient-to-br from-slate-900 to-blue-900 z-40 opacity-0 pointer-events-none flex flex-col justify-center items-center"
+    >
+        <!-- Background Patterns -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div
+                class="absolute -top-1/4 -right-1/4 w-1/2 h-1/2 bg-blue-500/20 rounded-full blur-3xl"
+            >
+            </div>
+            <div
+                class="absolute -bottom-1/4 -left-1/4 w-1/2 h-1/2 bg-orange-500/20 rounded-full blur-3xl"
+            >
+            </div>
+        </div>
+
+        <nav class="flex flex-col gap-8 text-center relative z-50">
+            {
+                ["Inicio", "Servicios", "Marcas", "Contacto"].map((item) => (
+                    <a
+                        href={`#${item.toLowerCase()}`}
+                        class="mobile-link text-4xl md:text-5xl font-bold text-white/50 hover:text-white transition-colors"
+                    >
+                        {item}
+                    </a>
+                ))
+            }
+            <a
+                href="tel:+56967140558"
+                class="mobile-link mt-8 bg-white text-blue-900 font-bold py-4 px-8 rounded-full text-xl shadow-xl shadow-white/10"
+            >
+                📞 Llamar Ahora
+            </a>
+        </nav>
+    </div>
+</header>
+
+<style>
+    /* Gradient Animation for borders or backgrounds if needed */
+    @keyframes gradient-xy {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+</style>
+
+<script>
+    import { gsap } from "gsap";
+
+    // Magnetic Button Effect
+    const magneticBtns = document.querySelectorAll(".magnetic-btn");
+    magneticBtns.forEach((btn) => {
+        btn.addEventListener("mousemove", (e) => {
+            // @ts-ignore
+            const rect = btn.getBoundingClientRect();
+            // @ts-ignore
+            const x = e.clientX - rect.left - rect.width / 2;
+            // @ts-ignore
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            gsap.to(btn, {
+                x: x * 0.3,
+                y: y * 0.3,
+                duration: 0.3,
+                ease: "power2.out",
+            });
+        });
+
+        btn.addEventListener("mouseleave", () => {
+            gsap.to(btn, {
+                x: 0,
+                y: 0,
+                duration: 0.5,
+                ease: "elastic.out(1, 0.5)",
+            });
+        });
+    });
+
+    // Mobile Menu Logic
+    const menuToggle = document.getElementById("menu-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const hamburgerSpans = document.querySelectorAll(".hamburger-icon span");
+    const mobileLinks = document.querySelectorAll(".mobile-link");
+    let isMenuOpen = false;
+
+    // Timeline for Menu Animation
+    const menuTl = gsap.timeline({ paused: true });
+
+    menuTl
+        .to(mobileMenu, {
+            opacity: 1,
+            duration: 0.5,
+            pointerEvents: "auto",
+            ease: "power2.inOut",
+        })
+        .from(
+            mobileLinks,
+            {
+                y: 50,
+                opacity: 0,
+                stagger: 0.1,
+                duration: 0.6,
+                ease: "back.out(1.7)",
+            },
+            "-=0.2",
+        );
+
+    menuToggle?.addEventListener("click", () => {
+        isMenuOpen = !isMenuOpen;
+        if (isMenuOpen) {
+            menuTl.play();
+            // Animate Hamburger to X
+            gsap.to(hamburgerSpans[0], {
+                rotate: 45,
+                y: 8,
+                backgroundColor: "#000",
+            });
+            gsap.to(hamburgerSpans[1], { opacity: 0 });
+            gsap.to(hamburgerSpans[2], {
+                rotate: -45,
+                y: -8,
+                backgroundColor: "#000",
+            });
+            gsap.to(menuToggle, { backgroundColor: "#fff" });
+        } else {
+            menuTl.reverse();
+            // Animate X back to Hamburger
+            gsap.to(hamburgerSpans[0], {
+                rotate: 0,
+                y: 0,
+                backgroundColor: "currentColor",
+            });
+            gsap.to(hamburgerSpans[1], {
+                opacity: 1,
+                backgroundColor: "currentColor",
+            });
+            gsap.to(hamburgerSpans[2], {
+                rotate: 0,
+                y: 0,
+                backgroundColor: "currentColor",
+            });
+            gsap.to(menuToggle, { backgroundColor: "#f1f5f9" });
+        }
+    });
+
+    // Close menu on link click
+    mobileLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+            if (isMenuOpen) {
+                isMenuOpen = false;
+                menuTl.reverse();
+                gsap.to(hamburgerSpans[0], {
+                    rotate: 0,
+                    y: 0,
+                    backgroundColor: "currentColor",
+                });
+                gsap.to(hamburgerSpans[1], {
+                    opacity: 1,
+                    backgroundColor: "currentColor",
+                });
+                gsap.to(hamburgerSpans[2], {
+                    rotate: 0,
+                    y: 0,
+                    backgroundColor: "currentColor",
+                });
+                gsap.to(menuToggle, { backgroundColor: "#f1f5f9" });
+            }
+        });
+    });
+</script>
