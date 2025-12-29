@@ -28,6 +28,34 @@ const {
 			gtag("js", new Date());
 
 			gtag("config", "AW-17834103657");
+
+			// WhatsApp Conversion
+			window.gtag_report_conversion_whatsapp = function (url) {
+				var callback = function () {
+					if (typeof url != "undefined") {
+						window.location = url;
+					}
+				};
+				gtag("event", "conversion", {
+					send_to: "AW-17834103657/LXYzCIqDs9kbEOmm-7dC",
+					event_callback: callback,
+				});
+				return false;
+			};
+
+			// Call Conversion
+			window.gtag_report_conversion_call = function (url) {
+				var callback = function () {
+					if (typeof url != "undefined") {
+						window.location = url;
+					}
+				};
+				gtag("event", "conversion", {
+					send_to: "AW-17834103657/-anUCJCDs9kbEOmm-7dC",
+					event_callback: callback,
+				});
+				return false;
+			};
 		</script>
 		<meta charset="UTF-8" />
 		<meta name="description" content={description} />
