@@ -229,19 +229,16 @@
         clearProps: "all",
     });
 
-    // Form Handling
     const form = document.getElementById("contactForm") as HTMLFormElement;
     const submitBtn = document.getElementById("submitBtn") as HTMLButtonElement;
     const btnText = document.getElementById("btnText");
     const btnLoader = document.getElementById("btnLoader");
 
-    declare const grecaptcha: any; // Type declaration for global grecaptcha
-
     if (form) {
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            // 1. Estado de carga visual
+            // 1. UI Loading State
             submitBtn.disabled = true;
             submitBtn.classList.add("opacity-75", "cursor-not-allowed");
             btnText?.classList.add("hidden");
@@ -251,80 +248,80 @@
             const data: any = Object.fromEntries(formData.entries());
 
             try {
-                // 2. Esperar a grecaptcha (Solución a Race Condition)
+                // 2. Lógica de Reintentos (Polling) para reCAPTCHA
+                // Usamos window['grecaptcha'] para evitar ReferenceError
                 const token = await new Promise<string>((resolve, reject) => {
                     let attempts = 0;
-                    const maxAttempts = 50; // 5 segundos max
-
-                    const checkGrecaptcha = () => {
+                    // Intentar cada 500ms hasta 10 veces (5 segundos)
+                    const checkInterval = setInterval(() => {
                         attempts++;
-                        // Verificamos si window.grecaptcha existe
-                        if (
-                            typeof window !== "undefined" &&
-                            (window as any).grecaptcha
-                        ) {
-                            (window as any).grecaptcha.ready(() => {
-                                (window as any).grecaptcha
-                                    .execute(
-                                        "6Lc-ZTssAAAAACTEL6IdjzMRAKFUkD3B6MP5IzF8",
-                                        { action: "submit" },
-                                    )
+                        const g = (window as any).grecaptcha;
+
+                        if (g && g.ready) {
+                            clearInterval(checkInterval);
+                            g.ready(() => {
+                                g.execute(
+                                    "6Lc-ZTssAAAAACTEL6IdjzMRAKFUkD3B6MP5IzF8",
+                                    { action: "submit" },
+                                )
                                     .then(resolve)
                                     .catch((err: any) =>
                                         reject(
                                             new Error(
-                                                "Error interno de reCAPTCHA: " +
+                                                "Google bloqueó la solicitud: " +
                                                     err.message,
                                             ),
                                         ),
                                     );
                             });
                         } else {
-                            if (attempts >= maxAttempts) {
+                            if (attempts >= 10) {
+                                clearInterval(checkInterval);
                                 reject(
                                     new Error(
-                                        "No pudimos conectar con Google reCAPTCHA. Por favor verifica tu conexión o desactiva el bloqueador de anuncios.",
+                                        "No pudimos conectar con el servicio de seguridad de Google. Es probable que una extensión (AdBlocker) lo esté bloqueando. Por favor intenta en Modo Incógnito.",
                                     ),
                                 );
-                            } else {
-                                setTimeout(checkGrecaptcha, 100); // Reintentar cada 100ms
                             }
                         }
-                    };
-
-                    checkGrecaptcha();
+                    }, 500);
                 });
 
                 data.recaptchaToken = token;
 
-                // 3. Envío al servidor
+                // 3. Envío al Backend
                 const response = await fetch("/api/send", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(data),
                 });
 
-                const responseData = await response.json().catch(() => ({}));
+                const contentType = response.headers.get("content-type");
+                let responseData;
+
+                if (contentType && contentType.includes("application/json")) {
+                    responseData = await response.json();
+                } else {
+                    responseData = { message: await response.text() };
+                }
 
                 if (response.ok) {
                     window.location.href = "/gracias";
                 } else {
                     throw new Error(
-                        responseData.message || "Error desconocido al enviar.",
+                        responseData.message || "Error del servidor.",
                     );
                 }
             } catch (error: any) {
-                console.error(error);
-                alert("⚠️ " + error.message);
-                resetBtn();
+                console.error("Form Error:", error);
+                alert(`⚠️ ${error.message}`);
+
+                // Resetear botón
+                submitBtn.disabled = false;
+                submitBtn.classList.remove("opacity-75", "cursor-not-allowed");
+                btnText?.classList.remove("hidden");
+                btnLoader?.classList.add("hidden");
             }
         });
-    }
-
-    function resetBtn() {
-        submitBtn.disabled = false;
-        submitBtn.classList.remove("opacity-75", "cursor-not-allowed");
-        btnText?.classList.remove("hidden");
-        btnLoader?.classList.add("hidden");
     }
 </script>
