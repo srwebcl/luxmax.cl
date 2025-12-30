@@ -7,12 +7,15 @@ import { Resend } from "resend";
 export const POST: APIRoute = async ({ request }) => {
   const apiKey = import.meta.env.RESEND_API_KEY || process.env.RESEND_API_KEY;
 
+  console.log(`[API/send] Received request. RESEND_API_KEY exists: ${!!apiKey}`);
+
   if (!apiKey) {
+    console.error("[API/send] Error: RESEND_API_KEY is missing from environment variables.");
     return new Response(
       JSON.stringify({
         message: "Configuration Error: RESEND_API_KEY is missing",
       }),
-      { status: 500 }
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 
@@ -22,8 +25,11 @@ export const POST: APIRoute = async ({ request }) => {
     const data = await request.json();
     const { name, phone, email, comuna, artefacto, problem, recaptchaToken } = data;
 
+    console.log(`[API/send] Payload received: Name=${name}, Phone=${phone}, Email=${email}`);
+
     // Verify reCAPTCHA
     const recaptchaSecret = import.meta.env.RECAPTCHA_SECRET_KEY || process.env.RECAPTCHA_SECRET_KEY;
+    console.log(`[API/send] Recaptcha Secret exists: ${!!recaptchaSecret}`);
 
     if (recaptchaSecret && recaptchaToken) {
       const recaptchaResponse = await fetch("https://www.google.com/recaptcha/api/siteverify", {
@@ -33,22 +39,24 @@ export const POST: APIRoute = async ({ request }) => {
       });
 
       const recaptchaData = await recaptchaResponse.json();
+      console.log("[API/send] Recaptcha verification result:", recaptchaData);
 
       if (!recaptchaData.success || recaptchaData.score < 0.5) {
-        console.warn(`reCAPTCHA blocked: Score ${recaptchaData.score}`);
+        console.warn(`[API/send] reCAPTCHA blocked: Score ${recaptchaData.score}`);
         return new Response(
           JSON.stringify({
             message: "Lo sentimos, detectamos tráfico inusual. Intenta más tarde.",
           }),
-          { status: 403 }
+          { status: 403, headers: { "Content-Type": "application/json" } }
         );
       }
     } else if (!recaptchaSecret) {
-      console.warn("reCAPTCHA skipped: SECRET_KEY missing in environment variables.");
+      console.warn("[API/send] reCAPTCHA skipped: SECRET_KEY missing in environment variables.");
     }
 
+    console.log("[API/send] Sending email to owner...");
     // 1. Email para el Negocio (Notificación de LEAD)
-    await resend.emails.send({
+    const ownerEmail = await resend.emails.send({
       from: "Lux Max Web <contacto@luxmax.cl>",
       to: ["contacto@luxmax.cl"],
       cc: ["walterreyes1606@gmail.com"],
@@ -72,8 +80,16 @@ export const POST: APIRoute = async ({ request }) => {
       `,
     });
 
+    if (ownerEmail.error) {
+      console.error("[API/send] Error sending owner email:", ownerEmail.error);
+      throw new Error(`Failed to send owner email: ${ownerEmail.error.message}`);
+    }
+
+    console.log("[API/send] Owner email sent successfully:", ownerEmail.data);
+
+    console.log("[API/send] Sending confirmation email to client...");
     // 2. Email para el Cliente (Respuesta Automática)
-    await resend.emails.send({
+    const clientEmail = await resend.emails.send({
       from: "Lux Max Servicio Técnico <contacto@luxmax.cl>",
       to: [email],
       subject: "✅ Hemos recibido tu solicitud - Lux Max",
@@ -98,6 +114,16 @@ export const POST: APIRoute = async ({ request }) => {
       `,
     });
 
+    if (clientEmail.error) {
+      console.error("[API/send] Error sending client email:", clientEmail.error);
+      // We don't throw here to avoid failing the whole request if just the client email fails, 
+      // but you might want to log it deeply.
+      console.warn("Client email failed but owner email succeeded.");
+    } else {
+      console.log("[API/send] Client email sent successfully:", clientEmail.data);
+    }
+
+
     return new Response(
       JSON.stringify({
         message: "Emails sent successfully",
@@ -110,11 +136,12 @@ export const POST: APIRoute = async ({ request }) => {
       }
     );
   } catch (error: any) {
-    console.error("Error sending email:", error);
+    console.error("[API/send] CRITICAL ERROR:", error);
     return new Response(
       JSON.stringify({
-        message: "Error sending email",
+        message: "Internal Server Error",
         error: error.message,
+        stack: error.stack // Optional: remove in production if preferred
       }),
       {
         status: 500,
