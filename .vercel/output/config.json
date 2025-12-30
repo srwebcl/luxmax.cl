@@ -22,6 +22,14 @@
 		{
 			"src": "^/api/send/?$",
 			"dest": "_render"
+		},
+		{
+			"src": "^/gracias/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/$",
+			"dest": "_render"
 		}
 	]
 }

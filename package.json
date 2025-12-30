@@ -2,6 +2,7 @@
   "name": "luxmax",
   "type": "module",
   "version": "0.0.1",
+  "description": "LuxMax Service Website",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",

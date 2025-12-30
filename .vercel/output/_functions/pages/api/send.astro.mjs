@@ -2,14 +2,48 @@ import { Resend } from 'resend';
 export { renderers } from '../../renderers.mjs';
 
 const prerender = false;
-const resend = new Resend(undefined                              );
 const POST = async ({ request }) => {
+  const apiKey = process.env.RESEND_API_KEY;
+  console.log(`[API/send] Received request. RESEND_API_KEY exists: ${!!apiKey}`);
+  if (!apiKey) {
+    console.error("[API/send] Error: RESEND_API_KEY is missing from environment variables.");
+    return new Response(
+      JSON.stringify({
+        message: "Configuration Error: RESEND_API_KEY is missing"
+      }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+  const resend = new Resend(apiKey);
   try {
     const data = await request.json();
-    const { name, phone, email, comuna, artefacto, problem } = data;
-    await resend.emails.send({
-      from: "Lux Max Web <onboarding@resend.dev>",
-      // Cambiar a tu dominio verificado si es posible, ej: web@luxmax.cl
+    const { name, phone, email, comuna, artefacto, problem, recaptchaToken } = data;
+    console.log(`[API/send] Payload received: Name=${name}, Phone=${phone}, Email=${email}`);
+    const recaptchaSecret = undefined                                     || process.env.RECAPTCHA_SECRET_KEY;
+    console.log(`[API/send] Recaptcha Secret exists: ${!!recaptchaSecret}`);
+    if (recaptchaSecret && recaptchaToken) {
+      const recaptchaResponse = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `secret=${recaptchaSecret}&response=${recaptchaToken}`
+      });
+      const recaptchaData = await recaptchaResponse.json();
+      console.log("[API/send] Recaptcha verification result:", recaptchaData);
+      if (!recaptchaData.success || recaptchaData.score < 0.5) {
+        console.warn(`[API/send] reCAPTCHA blocked: Score ${recaptchaData.score}`);
+        return new Response(
+          JSON.stringify({
+            message: "Lo sentimos, detectamos tráfico inusual. Intenta más tarde."
+          }),
+          { status: 403, headers: { "Content-Type": "application/json" } }
+        );
+      }
+    } else if (!recaptchaSecret) {
+      console.warn("[API/send] reCAPTCHA skipped: SECRET_KEY missing in environment variables.");
+    }
+    console.log("[API/send] Sending email to owner...");
+    const ownerEmail = await resend.emails.send({
+      from: "Lux Max Web <contacto@luxmax.cl>",
       to: ["contacto@luxmax.cl"],
       cc: ["walterreyes1606@gmail.com"],
       subject: `🔥 Nuevo Lead: ${name} (${artefacto})`,
@@ -31,8 +65,14 @@ const POST = async ({ request }) => {
         </div>
       `
     });
-    await resend.emails.send({
-      from: "Lux Max Servicio Técnico <onboarding@resend.dev>",
+    if (ownerEmail.error) {
+      console.error("[API/send] Error sending owner email:", ownerEmail.error);
+      throw new Error(`Failed to send owner email: ${ownerEmail.error.message}`);
+    }
+    console.log("[API/send] Owner email sent successfully:", ownerEmail.data);
+    console.log("[API/send] Sending confirmation email to client...");
+    const clientEmail = await resend.emails.send({
+      from: "Lux Max Servicio Técnico <contacto@luxmax.cl>",
       to: [email],
       subject: "✅ Hemos recibido tu solicitud - Lux Max",
       html: `
@@ -55,6 +95,12 @@ const POST = async ({ request }) => {
         </div>
       `
     });
+    if (clientEmail.error) {
+      console.error("[API/send] Error sending client email:", clientEmail.error);
+      console.warn("Client email failed but owner email succeeded.");
+    } else {
+      console.log("[API/send] Client email sent successfully:", clientEmail.data);
+    }
     return new Response(
       JSON.stringify({
         message: "Emails sent successfully"
@@ -67,11 +113,13 @@ const POST = async ({ request }) => {
       }
     );
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error("[API/send] CRITICAL ERROR:", error);
     return new Response(
       JSON.stringify({
-        message: "Error sending email",
-        error: error.message
+        message: "Internal Server Error",
+        error: error.message,
+        stack: error.stack
+        // Optional: remove in production if preferred
       }),
       {
         status: 500,
@@ -84,9 +132,9 @@ const POST = async ({ request }) => {
 };
 
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
-    __proto__: null,
-    POST,
-    prerender
+  __proto__: null,
+  POST,
+  prerender
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const page = () => _page;
