@@ -251,14 +251,15 @@
             const data: any = Object.fromEntries(formData.entries());
 
             try {
-                // 1. Validación de seguridad: Verificar si reCAPTCHA cargó
-                if (typeof grecaptcha === "undefined") {
+                // 1. Verificación de Seguridad: ¿Existe grecaptcha?
+                if (typeof grecaptcha === "undefined" || !grecaptcha) {
+                    // Si entra aquí, es porque un AdBlocker o error de red bloqueó el script
                     throw new Error(
-                        "El servicio de seguridad no ha cargado. Por favor, recarga la página.",
+                        "Error de seguridad: El sistema antispam no se pudo cargar. Si tienes un bloqueador de anuncios (AdBlocker), por favor desactívalo temporalmente o verifica tu conexión.",
                     );
                 }
 
-                // 2. Ejecución de reCAPTCHA
+                // 2. Obtención del Token
                 const token = await new Promise<string>((resolve, reject) => {
                     grecaptcha.ready(() => {
                         grecaptcha
@@ -267,23 +268,27 @@
                                 { action: "submit" },
                             )
                             .then((token: string) => resolve(token))
-                            .catch((err: any) => reject(err));
+                            .catch((err: any) =>
+                                reject(
+                                    new Error(
+                                        "Error generando token: " + err.message,
+                                    ),
+                                ),
+                            );
                     });
                 });
 
+                // Asignar token a los datos
                 data.recaptchaToken = token;
 
-                // 3. Envío al backend
+                // 3. Envío al Backend
                 const response = await fetch("/api/send", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(data),
                 });
 
-                console.log("Response status:", response.status);
-
+                // -- MANTENER EL RESTO DE TU LÓGICA DE RESPUESTA (response.ok, etc) AQUÍ --
                 const contentType = response.headers.get("content-type");
                 let responseData;
 
@@ -291,24 +296,23 @@
                     responseData = await response.json();
                 } else {
                     const text = await response.text();
-                    console.error("Non-JSON response:", text);
-                    throw new Error(
-                        "El servidor devolvió una respuesta inesperada.",
-                    );
+                    throw new Error("Respuesta inesperada del servidor");
                 }
 
                 if (response.ok) {
                     window.location.href = "/gracias";
                 } else {
-                    console.error("Server Error:", responseData);
                     alert(
-                        `Error: ${responseData.message || "Hubo un error al enviar el formulario."}\n\nDetalles: ${responseData.error || ""}`,
+                        `Error: ${responseData.message || "Hubo un error al enviar."}`,
                     );
                     resetBtn();
                 }
             } catch (error: any) {
-                console.error("Error en el formulario:", error);
-                alert(error.message || "Error desconocido");
+                console.error("Submission Error:", error);
+                // Mostrar mensaje amigable al usuario
+                alert(
+                    `⚠️ No pudimos enviar el formulario.\n\n${error.message}`,
+                );
                 resetBtn();
             }
         });
