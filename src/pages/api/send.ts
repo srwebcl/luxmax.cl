@@ -6,17 +6,17 @@ import { Resend } from "resend";
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
 export const POST: APIRoute = async ({ request }) => {
-    try {
-        const data = await request.json();
-        const { name, phone, email, comuna, artefacto, problem } = data;
+  try {
+    const data = await request.json();
+    const { name, phone, email, comuna, artefacto, problem } = data;
 
-        // 1. Email para el Negocio (Notificación de LEAD)
-        await resend.emails.send({
-            from: "Lux Max Web <onboarding@resend.dev>", // Cambiar a tu dominio verificado si es posible, ej: web@luxmax.cl
-            to: ["contacto@luxmax.cl"],
-            cc: ["walterreyes1606@gmail.com"],
-            subject: `🔥 Nuevo Lead: ${name} (${artefacto})`,
-            html: `
+    // 1. Email para el Negocio (Notificación de LEAD)
+    await resend.emails.send({
+      from: "Lux Max Web <contacto@luxmax.cl>",
+      to: ["contacto@luxmax.cl"],
+      cc: ["walterreyes1606@gmail.com"],
+      subject: `🔥 Nuevo Lead: ${name} (${artefacto})`,
+      html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h1 style="color: #1e3a8a;">Nuevo Cliente Potencial</h1>
           <p>Un usuario ha solicitado visita técnica desde la web.</p>
@@ -33,14 +33,14 @@ export const POST: APIRoute = async ({ request }) => {
           <p>Contactar lo antes posible para agendar.</p>
         </div>
       `,
-        });
+    });
 
-        // 2. Email para el Cliente (Respuesta Automática)
-        await resend.emails.send({
-            from: "Lux Max Servicio Técnico <onboarding@resend.dev>",
-            to: [email],
-            subject: "✅ Hemos recibido tu solicitud - Lux Max",
-            html: `
+    // 2. Email para el Cliente (Respuesta Automática)
+    await resend.emails.send({
+      from: "Lux Max Servicio Técnico <contacto@luxmax.cl>",
+      to: [email],
+      subject: "✅ Hemos recibido tu solicitud - Lux Max",
+      html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; text-align: center;">
           <div style="background: #1e3a8a; padding: 20px; border-radius: 10px 10px 0 0;">
             <h1 style="color: white; margin: 0;">¡Solicitud Recibida!</h1>
@@ -59,32 +59,32 @@ export const POST: APIRoute = async ({ request }) => {
           </div>
         </div>
       `,
-        });
+    });
 
-        return new Response(
-            JSON.stringify({
-                message: "Emails sent successfully",
-            }),
-            {
-                status: 200,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }
-        );
-    } catch (error: any) {
-        console.error("Error sending email:", error);
-        return new Response(
-            JSON.stringify({
-                message: "Error sending email",
-                error: error.message,
-            }),
-            {
-                status: 500,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }
-        );
-    }
+    return new Response(
+      JSON.stringify({
+        message: "Emails sent successfully",
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error: any) {
+    console.error("Error sending email:", error);
+    return new Response(
+      JSON.stringify({
+        message: "Error sending email",
+        error: error.message,
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
 };

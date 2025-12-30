@@ -260,8 +260,10 @@
                 if (response.ok) {
                     window.location.href = "/gracias";
                 } else {
+                    const errorData = await response.json();
+                    console.error("Server Error:", errorData);
                     alert(
-                        "Hubo un error al enviar el formulario. Por favor, intenta nuevamente.",
+                        `Error: ${errorData.message || "Hubo un error al enviar el formulario."}`,
                     );
                     resetBtn();
                 }
