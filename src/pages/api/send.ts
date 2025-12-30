@@ -20,7 +20,32 @@ export const POST: APIRoute = async ({ request }) => {
 
   try {
     const data = await request.json();
-    const { name, phone, email, comuna, artefacto, problem } = data;
+    const { name, phone, email, comuna, artefacto, problem, recaptchaToken } = data;
+
+    // Verify reCAPTCHA
+    const recaptchaSecret = import.meta.env.RECAPTCHA_SECRET_KEY || process.env.RECAPTCHA_SECRET_KEY;
+
+    if (recaptchaSecret && recaptchaToken) {
+      const recaptchaResponse = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `secret=${recaptchaSecret}&response=${recaptchaToken}`,
+      });
+
+      const recaptchaData = await recaptchaResponse.json();
+
+      if (!recaptchaData.success || recaptchaData.score < 0.5) {
+        console.warn(`reCAPTCHA blocked: Score ${recaptchaData.score}`);
+        return new Response(
+          JSON.stringify({
+            message: "Lo sentimos, detectamos tráfico inusual. Intenta más tarde.",
+          }),
+          { status: 403 }
+        );
+      }
+    } else if (!recaptchaSecret) {
+      console.warn("reCAPTCHA skipped: SECRET_KEY missing in environment variables.");
+    }
 
     // 1. Email para el Negocio (Notificación de LEAD)
     await resend.emails.send({

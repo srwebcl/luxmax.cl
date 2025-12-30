@@ -211,6 +211,11 @@
     </div>
 </section>
 
+<!-- reCAPTCHA v3 Script -->
+<script
+    src="https://www.google.com/recaptcha/api.js?render=6Lc-ZTssAAAAACTEL6IdjzMRAKFUkD3B6MP5IzF8"
+></script>
+
 <script>
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -235,6 +240,8 @@
     const btnText = document.getElementById("btnText");
     const btnLoader = document.getElementById("btnLoader");
 
+    declare const grecaptcha: any; // Type declaration for global grecaptcha
+
     if (form) {
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -246,9 +253,25 @@
             btnLoader?.classList.remove("hidden");
 
             const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
+            const data: any = Object.fromEntries(formData.entries());
 
             try {
+                // Execute reCAPTCHA
+                const token = await new Promise<string>((resolve) => {
+                    grecaptcha.ready(() => {
+                        grecaptcha
+                            .execute(
+                                "6Lc-ZTssAAAAACTEL6IdjzMRAKFUkD3B6MP5IzF8",
+                                { action: "submit" },
+                            )
+                            .then((token: string) => {
+                                resolve(token);
+                            });
+                    });
+                });
+
+                data.recaptchaToken = token;
+
                 const response = await fetch("/api/send", {
                     method: "POST",
                     headers: {
