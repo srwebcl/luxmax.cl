@@ -9,13 +9,8 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
 
   vite: {
-    plugins: [tailwindcss()],
-    ssr: {
-      noExternal: true
-    }
+    plugins: [tailwindcss()]
   },
 
-  adapter: vercel({
-    webAnalytics: { enabled: true }
-  })
+  adapter: vercel()
 });
