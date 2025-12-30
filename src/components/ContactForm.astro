@@ -241,7 +241,7 @@
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            // Loading State
+            // 1. UI Loading State
             submitBtn.disabled = true;
             submitBtn.classList.add("opacity-75", "cursor-not-allowed");
             btnText?.classList.add("hidden");
@@ -251,34 +251,50 @@
             const data: any = Object.fromEntries(formData.entries());
 
             try {
-                // 1. Verificación de Seguridad: ¿Existe grecaptcha?
-                if (typeof grecaptcha === "undefined" || !grecaptcha) {
-                    // Si entra aquí, es porque un AdBlocker o error de red bloqueó el script
-                    throw new Error(
-                        "Error de seguridad: El sistema antispam no se pudo cargar. Si tienes un bloqueador de anuncios (AdBlocker), por favor desactívalo temporalmente o verifica tu conexión.",
-                    );
-                }
-
-                // 2. Obtención del Token
+                // 2. Validación de Seguridad (Wait for reCAPTCHA)
                 const token = await new Promise<string>((resolve, reject) => {
-                    grecaptcha.ready(() => {
-                        grecaptcha
-                            .execute(
-                                "6Lc-ZTssAAAAACTEL6IdjzMRAKFUkD3B6MP5IzF8",
-                                { action: "submit" },
-                            )
-                            .then((token: string) => resolve(token))
-                            .catch((err: any) =>
+                    // Caso A: grecaptcha ya cargó
+                    if (typeof grecaptcha !== "undefined") {
+                        grecaptcha.ready(() => {
+                            grecaptcha
+                                .execute(
+                                    "6Lc-ZTssAAAAACTEL6IdjzMRAKFUkD3B6MP5IzF8",
+                                    { action: "submit" },
+                                )
+                                .then(resolve)
+                                .catch(reject);
+                        });
+                    }
+                    // Caso B: grecaptcha no ha cargado (AdBlocker o Red Lenta)
+                    else {
+                        // Esperar máx 2 segundos
+                        let attempts = 0;
+                        const checkInterval = setInterval(() => {
+                            attempts++;
+                            if (typeof grecaptcha !== "undefined") {
+                                clearInterval(checkInterval);
+                                grecaptcha.ready(() => {
+                                    grecaptcha
+                                        .execute(
+                                            "6Lc-ZTssAAAAACTEL6IdjzMRAKFUkD3B6MP5IzF8",
+                                            { action: "submit" },
+                                        )
+                                        .then(resolve)
+                                        .catch(reject);
+                                });
+                            } else if (attempts > 20) {
+                                // 2 segundos timeout
+                                clearInterval(checkInterval);
                                 reject(
                                     new Error(
-                                        "Error generando token: " + err.message,
+                                        "No se pudo cargar el sistema de seguridad (reCAPTCHA). Si usas un bloqueador de anuncios, por favor desactívalo.",
                                     ),
-                                ),
-                            );
-                    });
+                                );
+                            }
+                        }, 100);
+                    }
                 });
 
-                // Asignar token a los datos
                 data.recaptchaToken = token;
 
                 // 3. Envío al Backend
@@ -288,31 +304,25 @@
                     body: JSON.stringify(data),
                 });
 
-                // -- MANTENER EL RESTO DE TU LÓGICA DE RESPUESTA (response.ok, etc) AQUÍ --
+                // Manejo de respuesta
                 const contentType = response.headers.get("content-type");
                 let responseData;
-
                 if (contentType && contentType.includes("application/json")) {
                     responseData = await response.json();
                 } else {
-                    const text = await response.text();
-                    throw new Error("Respuesta inesperada del servidor");
+                    responseData = { message: await response.text() };
                 }
 
                 if (response.ok) {
                     window.location.href = "/gracias";
                 } else {
-                    alert(
-                        `Error: ${responseData.message || "Hubo un error al enviar."}`,
+                    throw new Error(
+                        responseData.message || "Error al enviar solicitud.",
                     );
-                    resetBtn();
                 }
             } catch (error: any) {
-                console.error("Submission Error:", error);
-                // Mostrar mensaje amigable al usuario
-                alert(
-                    `⚠️ No pudimos enviar el formulario.\n\n${error.message}`,
-                );
+                console.error("Error Form:", error);
+                alert(`⚠️ ${error.message}`);
                 resetBtn();
             }
         });
