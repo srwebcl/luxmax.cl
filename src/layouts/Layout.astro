@@ -54,8 +54,17 @@ const {
 					send_to: "AW-17834103657/-anUCJCDs9kbEOmm-7dC",
 					event_callback: callback,
 				});
-				return false;
 			};
+
+			// Form Conversion (Specific Code for "Formularios Sitios Web") - "l_lxCKXx4dkbEOmm-7dC"
+			if (window.location.pathname.includes("/gracias")) {
+				console.log(
+					"LuxMax: Conversión de Formulario detectada (Manual: l_lxCKXx4dkbEOmm-7dC)",
+				);
+				gtag("event", "conversion", {
+					send_to: "AW-17834103657/l_lxCKXx4dkbEOmm-7dC",
+				});
+			}
 		</script>
 		<meta charset="UTF-8" />
 		<meta name="description" content={description} />
