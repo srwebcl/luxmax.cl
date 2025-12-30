@@ -241,7 +241,7 @@
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            // 1. UI Loading State
+            // 1. Estado de carga visual
             submitBtn.disabled = true;
             submitBtn.classList.add("opacity-75", "cursor-not-allowed");
             btnText?.classList.add("hidden");
@@ -251,78 +251,71 @@
             const data: any = Object.fromEntries(formData.entries());
 
             try {
-                // 2. Validación de Seguridad (Wait for reCAPTCHA)
+                // 2. Esperar a grecaptcha (Solución a Race Condition)
                 const token = await new Promise<string>((resolve, reject) => {
-                    // Caso A: grecaptcha ya cargó
-                    if (typeof grecaptcha !== "undefined") {
-                        grecaptcha.ready(() => {
-                            grecaptcha
-                                .execute(
-                                    "6Lc-ZTssAAAAACTEL6IdjzMRAKFUkD3B6MP5IzF8",
-                                    { action: "submit" },
-                                )
-                                .then(resolve)
-                                .catch(reject);
-                        });
-                    }
-                    // Caso B: grecaptcha no ha cargado (AdBlocker o Red Lenta)
-                    else {
-                        // Esperar máx 2 segundos
-                        let attempts = 0;
-                        const checkInterval = setInterval(() => {
-                            attempts++;
-                            if (typeof grecaptcha !== "undefined") {
-                                clearInterval(checkInterval);
-                                grecaptcha.ready(() => {
-                                    grecaptcha
-                                        .execute(
-                                            "6Lc-ZTssAAAAACTEL6IdjzMRAKFUkD3B6MP5IzF8",
-                                            { action: "submit" },
-                                        )
-                                        .then(resolve)
-                                        .catch(reject);
-                                });
-                            } else if (attempts > 20) {
-                                // 2 segundos timeout
-                                clearInterval(checkInterval);
+                    let attempts = 0;
+                    const maxAttempts = 50; // 5 segundos max
+
+                    const checkGrecaptcha = () => {
+                        attempts++;
+                        // Verificamos si window.grecaptcha existe
+                        if (
+                            typeof window !== "undefined" &&
+                            (window as any).grecaptcha
+                        ) {
+                            (window as any).grecaptcha.ready(() => {
+                                (window as any).grecaptcha
+                                    .execute(
+                                        "6Lc-ZTssAAAAACTEL6IdjzMRAKFUkD3B6MP5IzF8",
+                                        { action: "submit" },
+                                    )
+                                    .then(resolve)
+                                    .catch((err: any) =>
+                                        reject(
+                                            new Error(
+                                                "Error interno de reCAPTCHA: " +
+                                                    err.message,
+                                            ),
+                                        ),
+                                    );
+                            });
+                        } else {
+                            if (attempts >= maxAttempts) {
                                 reject(
                                     new Error(
-                                        "No se pudo cargar el sistema de seguridad (reCAPTCHA). Si usas un bloqueador de anuncios, por favor desactívalo.",
+                                        "No pudimos conectar con Google reCAPTCHA. Por favor verifica tu conexión o desactiva el bloqueador de anuncios.",
                                     ),
                                 );
+                            } else {
+                                setTimeout(checkGrecaptcha, 100); // Reintentar cada 100ms
                             }
-                        }, 100);
-                    }
+                        }
+                    };
+
+                    checkGrecaptcha();
                 });
 
                 data.recaptchaToken = token;
 
-                // 3. Envío al Backend
+                // 3. Envío al servidor
                 const response = await fetch("/api/send", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(data),
                 });
 
-                // Manejo de respuesta
-                const contentType = response.headers.get("content-type");
-                let responseData;
-                if (contentType && contentType.includes("application/json")) {
-                    responseData = await response.json();
-                } else {
-                    responseData = { message: await response.text() };
-                }
+                const responseData = await response.json().catch(() => ({}));
 
                 if (response.ok) {
                     window.location.href = "/gracias";
                 } else {
                     throw new Error(
-                        responseData.message || "Error al enviar solicitud.",
+                        responseData.message || "Error desconocido al enviar.",
                     );
                 }
             } catch (error: any) {
-                console.error("Error Form:", error);
-                alert(`⚠️ ${error.message}`);
+                console.error(error);
+                alert("⚠️ " + error.message);
                 resetBtn();
             }
         });
