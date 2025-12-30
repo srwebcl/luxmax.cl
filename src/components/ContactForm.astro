@@ -211,11 +211,6 @@
     </div>
 </section>
 
-<!-- reCAPTCHA v3 Script -->
-<script
-    src="https://www.google.com/recaptcha/api.js?render=6Lc-ZTssAAAAACTEL6IdjzMRAKFUkD3B6MP5IzF8"
-></script>
-
 <script>
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -256,22 +251,29 @@
             const data: any = Object.fromEntries(formData.entries());
 
             try {
-                // Execute reCAPTCHA
-                const token = await new Promise<string>((resolve) => {
+                // 1. Validación de seguridad: Verificar si reCAPTCHA cargó
+                if (typeof grecaptcha === "undefined") {
+                    throw new Error(
+                        "El servicio de seguridad no ha cargado. Por favor, recarga la página.",
+                    );
+                }
+
+                // 2. Ejecución de reCAPTCHA
+                const token = await new Promise<string>((resolve, reject) => {
                     grecaptcha.ready(() => {
                         grecaptcha
                             .execute(
                                 "6Lc-ZTssAAAAACTEL6IdjzMRAKFUkD3B6MP5IzF8",
                                 { action: "submit" },
                             )
-                            .then((token: string) => {
-                                resolve(token);
-                            });
+                            .then((token: string) => resolve(token))
+                            .catch((err: any) => reject(err));
                     });
                 });
 
                 data.recaptchaToken = token;
 
+                // 3. Envío al backend
                 const response = await fetch("/api/send", {
                     method: "POST",
                     headers: {
@@ -305,10 +307,8 @@
                     resetBtn();
                 }
             } catch (error: any) {
-                console.error("Submission Error:", error);
-                alert(
-                    `Error de conexión o del servidor.\n\nRevisa la consola para más detalles (F12). \n\nMensaje: ${error.message}`,
-                );
+                console.error("Error en el formulario:", error);
+                alert(error.message || "Error desconocido");
                 resetBtn();
             }
         });
