@@ -9,7 +9,10 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    ssr: {
+      noExternal: ['piccolore']
+    }
   },
 
   adapter: vercel({
