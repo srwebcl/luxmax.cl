@@ -1,0 +1,1 @@
+import{g as o}from"./index.CB87Sc6I.js";o.to(".success-content",{y:0,opacity:1,duration:1,ease:"power2.out",delay:.2});o.from(".check-icon path",{strokeDasharray:30,strokeDashoffset:30,duration:.8,ease:"power2.out",delay:.5});
