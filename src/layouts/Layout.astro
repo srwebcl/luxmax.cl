@@ -33,7 +33,7 @@ const {
 			window.gtag_report_conversion_whatsapp = function (url) {
 				var callback = function () {
 					if (typeof url != "undefined") {
-						window.location = url;
+						window.open(url, "_blank");
 					}
 				};
 				gtag("event", "conversion", {
@@ -56,16 +56,6 @@ const {
 				});
 				return false;
 			};
-
-			// Explicitly force an event on /gracias to aid detection
-			if (window.location.pathname.includes("/gracias")) {
-				console.log(
-					"FluxMax: Detectada visita a /gracias. Enviando evento DE CONVERSIÓN...",
-				);
-				gtag("event", "conversion", {
-					send_to: "AW-17834103657",
-				});
-			}
 		</script>
 		<meta charset="UTF-8" />
 		<meta name="description" content={description} />
