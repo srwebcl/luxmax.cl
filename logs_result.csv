@@ -1,0 +1,129 @@
+TimeUTC,timestampInMs,requestPath,requestMethod,requestQueryString,responseStatusCode,requestId,requestUserAgent,level,environment,branch,vercelCache,type,function,host,deploymentDomain,deploymentId,durationMs,region,maxMemoryUsed,memorySize,message,projectId,traceId,sessionId,invocationId,instanceId,concurrency
+2025-12-30 19:17:49,1767122269549,www.luxmax.cl/,GET,,500,mkrkq-1767122268872-b5a8526995f7,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",error,production,main,MISS,serverless,/,www.luxmax.cl,www.luxmax.cl,dpl_DyyHnWFszS472KupFkcyuBXaodkp,,,,,"Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/var/task/dist/server/entry.mjs' imported from /opt/rust/nodejs.js
+    at finalizeResolution (node:internal/modules/esm/resolve:287:11)
+    at moduleResolve (node:internal/modules/esm/resolve:956:10)
+    at moduleResolveWithNodePath (node:internal/modules/esm/resolve:1192:14)
+    at defaultResolve (node:internal/modules/esm/resolve:1235:79)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+    at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+    at defaultImportModuleDynamicallyForScript (node:internal/modules/esm/utils:234:31) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///var/task/dist/server/entry.mjs'
+}
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_XoRs5TbncewutVR9iVi2Hyt3upav,,,,,
+2025-12-30 19:17:48,1767122268872,www.luxmax.cl/,GET,,500,mkrkq-1767122268872-b5a8526995f7,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",,production,main,MISS,serverless,/_render,www.luxmax.cl,www.luxmax.cl,dpl_DyyHnWFszS472KupFkcyuBXaodkp,125,iad1,-1,2048,,prj_XoRs5TbncewutVR9iVi2Hyt3upav,,,01KDRB3X73TWNNWC0XKMKARZJR,,-1
+2025-12-30 19:17:48,1767122268568,www.luxmax.cl/,GET,,500,jkc89-1767122268568-4277f5a41aef,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",,production,main,MISS,,/,www.luxmax.cl,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,dpl_DyyHnWFszS472KupFkcyuBXaodkp,,,,,,prj_XoRs5TbncewutVR9iVi2Hyt3upav,,,,,
+2025-12-30 19:17:48,1767122268455,luxmax-2fje2mvsr-srwebcls-projects.vercel.app/,GET,,500,f4q7m-1767122268276-0203e752ba7e,vercel-favicon/1.0,error,production,main,MISS,serverless,/,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,dpl_DyyHnWFszS472KupFkcyuBXaodkp,,,,,"Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/var/task/dist/server/entry.mjs' imported from /opt/rust/nodejs.js
+    at finalizeResolution (node:internal/modules/esm/resolve:287:11)
+    at moduleResolve (node:internal/modules/esm/resolve:956:10)
+    at moduleResolveWithNodePath (node:internal/modules/esm/resolve:1192:14)
+    at defaultResolve (node:internal/modules/esm/resolve:1235:79)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+    at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+    at defaultImportModuleDynamicallyForScript (node:internal/modules/esm/utils:234:31) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///var/task/dist/server/entry.mjs'
+}
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_XoRs5TbncewutVR9iVi2Hyt3upav,,,,,
+2025-12-30 19:17:48,1767122268276,luxmax-2fje2mvsr-srwebcls-projects.vercel.app/,GET,,500,f4q7m-1767122268276-0203e752ba7e,vercel-favicon/1.0,,production,main,MISS,serverless,/_render,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,dpl_DyyHnWFszS472KupFkcyuBXaodkp,120,iad1,-1,2048,,prj_XoRs5TbncewutVR9iVi2Hyt3upav,,,01KDRB3W52GWHK63K340SEH0TG,,-1
+2025-12-30 19:17:47,1767122267189,luxmax-2fje2mvsr-srwebcls-projects.vercel.app/,GET,,500,w2rbf-1767122266989-90408fdf47cf,vercel-favicon/1.0,error,production,main,MISS,serverless,/,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,dpl_DyyHnWFszS472KupFkcyuBXaodkp,,,,,"Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/var/task/dist/server/entry.mjs' imported from /opt/rust/nodejs.js
+    at finalizeResolution (node:internal/modules/esm/resolve:287:11)
+    at moduleResolve (node:internal/modules/esm/resolve:956:10)
+    at moduleResolveWithNodePath (node:internal/modules/esm/resolve:1192:14)
+    at defaultResolve (node:internal/modules/esm/resolve:1235:79)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+    at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+    at defaultImportModuleDynamicallyForScript (node:internal/modules/esm/utils:234:31) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///var/task/dist/server/entry.mjs'
+}
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_XoRs5TbncewutVR9iVi2Hyt3upav,,,,,
+2025-12-30 19:17:46,1767122266989,luxmax-2fje2mvsr-srwebcls-projects.vercel.app/,GET,,500,w2rbf-1767122266989-90408fdf47cf,vercel-favicon/1.0,,production,main,MISS,serverless,/_render,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,dpl_DyyHnWFszS472KupFkcyuBXaodkp,125,iad1,-1,2048,,prj_XoRs5TbncewutVR9iVi2Hyt3upav,,,01KDRB3TX5P28ZKSX3P6BDMDMQ,,-1
+2025-12-30 19:17:13,1767122233978,luxmax-2fje2mvsr-srwebcls-projects.vercel.app/,GET,,500,5pb6k-1767122233679-9e3698dd043e,vercel-screenshot/1.0,error,production,main,MISS,serverless,/,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,dpl_DyyHnWFszS472KupFkcyuBXaodkp,,,,,"Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/var/task/dist/server/entry.mjs' imported from /opt/rust/nodejs.js
+    at finalizeResolution (node:internal/modules/esm/resolve:287:11)
+    at moduleResolve (node:internal/modules/esm/resolve:956:10)
+    at moduleResolveWithNodePath (node:internal/modules/esm/resolve:1192:14)
+    at defaultResolve (node:internal/modules/esm/resolve:1235:79)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+    at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+    at defaultImportModuleDynamicallyForScript (node:internal/modules/esm/utils:234:31) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///var/task/dist/server/entry.mjs'
+}
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_XoRs5TbncewutVR9iVi2Hyt3upav,,,,,
+2025-12-30 19:17:13,1767122233679,luxmax-2fje2mvsr-srwebcls-projects.vercel.app/,GET,,500,5pb6k-1767122233679-9e3698dd043e,vercel-screenshot/1.0,,production,main,MISS,serverless,/_render,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,dpl_DyyHnWFszS472KupFkcyuBXaodkp,133,iad1,-1,2048,,prj_XoRs5TbncewutVR9iVi2Hyt3upav,,,01KDRB2TF0M1BR1XKY8WA8WB1X,,-1
+2025-12-30 19:17:13,1767122233503,luxmax-2fje2mvsr-srwebcls-projects.vercel.app/,GET,,500,x4dln-1767122233212-25d05b6926e8,vercel-screenshot/1.0,error,production,main,MISS,serverless,/,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,dpl_DyyHnWFszS472KupFkcyuBXaodkp,,,,,"Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/var/task/dist/server/entry.mjs' imported from /opt/rust/nodejs.js
+    at finalizeResolution (node:internal/modules/esm/resolve:287:11)
+    at moduleResolve (node:internal/modules/esm/resolve:956:10)
+    at moduleResolveWithNodePath (node:internal/modules/esm/resolve:1192:14)
+    at defaultResolve (node:internal/modules/esm/resolve:1235:79)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+    at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+    at defaultImportModuleDynamicallyForScript (node:internal/modules/esm/utils:234:31) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///var/task/dist/server/entry.mjs'
+}
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_XoRs5TbncewutVR9iVi2Hyt3upav,,,,,
+2025-12-30 19:17:13,1767122233212,luxmax-2fje2mvsr-srwebcls-projects.vercel.app/,GET,,500,x4dln-1767122233212-25d05b6926e8,vercel-screenshot/1.0,,production,main,MISS,serverless,/_render,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,dpl_DyyHnWFszS472KupFkcyuBXaodkp,126,iad1,-1,2048,,prj_XoRs5TbncewutVR9iVi2Hyt3upav,,,01KDRB2T0JKGVN57JV8AD8YG51,,-1
+2025-12-30 19:17:13,1767122233062,luxmax-2fje2mvsr-srwebcls-projects.vercel.app/,GET,,500,c9d6d-1767122232515-528bcdbe11e6,vercel-screenshot/1.0,error,production,main,MISS,serverless,/,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,dpl_DyyHnWFszS472KupFkcyuBXaodkp,,,,,"Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/var/task/dist/server/entry.mjs' imported from /opt/rust/nodejs.js
+    at finalizeResolution (node:internal/modules/esm/resolve:287:11)
+    at moduleResolve (node:internal/modules/esm/resolve:956:10)
+    at moduleResolveWithNodePath (node:internal/modules/esm/resolve:1192:14)
+    at defaultResolve (node:internal/modules/esm/resolve:1235:79)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+    at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+    at defaultImportModuleDynamicallyForScript (node:internal/modules/esm/utils:234:31) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///var/task/dist/server/entry.mjs'
+}
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_XoRs5TbncewutVR9iVi2Hyt3upav,,,,,
+2025-12-30 19:17:12,1767122232515,luxmax-2fje2mvsr-srwebcls-projects.vercel.app/,GET,,500,c9d6d-1767122232515-528bcdbe11e6,vercel-screenshot/1.0,,production,main,MISS,serverless,/_render,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,dpl_DyyHnWFszS472KupFkcyuBXaodkp,130,iad1,-1,2048,,prj_XoRs5TbncewutVR9iVi2Hyt3upav,,,01KDRB2SJJ5CKJQFTNB7YYJN7B,,-1
+2025-12-30 19:17:13,1767122233460,luxmax-2fje2mvsr-srwebcls-projects.vercel.app/,GET,,500,5pb6k-1767122232499-c19939671ff7,vercel-screenshot/1.0,error,production,main,MISS,serverless,/,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,dpl_DyyHnWFszS472KupFkcyuBXaodkp,,,,,"Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/var/task/dist/server/entry.mjs' imported from /opt/rust/nodejs.js
+    at finalizeResolution (node:internal/modules/esm/resolve:287:11)
+    at moduleResolve (node:internal/modules/esm/resolve:956:10)
+    at moduleResolveWithNodePath (node:internal/modules/esm/resolve:1192:14)
+    at defaultResolve (node:internal/modules/esm/resolve:1235:79)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+    at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+    at defaultImportModuleDynamicallyForScript (node:internal/modules/esm/utils:234:31) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///var/task/dist/server/entry.mjs'
+}
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/var/task/dist/server/entry.mjs' imported from /opt/rust/nodejs.js
+    at finalizeResolution (node:internal/modules/esm/resolve:287:11)
+    at moduleResolve (node:internal/modules/esm/resolve:956:10)
+    at moduleResolveWithNodePath (node:internal/modules/esm/resolve:1192:14)
+    at defaultResolve (node:internal/modules/esm/resolve:1235:79)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+    at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+    at defaultImportModuleDynamicallyForScript (node:internal/modules/esm/utils:234:31) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///var/task/dist/server/entry.mjs'
+}
+Node.js process exited with exit status: 1. The logs above can help with debugging the issue.",prj_XoRs5TbncewutVR9iVi2Hyt3upav,,,,,
+2025-12-30 19:17:12,1767122232499,luxmax-2fje2mvsr-srwebcls-projects.vercel.app/,GET,,500,5pb6k-1767122232499-c19939671ff7,vercel-screenshot/1.0,,production,main,MISS,serverless,/_render,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,luxmax-2fje2mvsr-srwebcls-projects.vercel.app,dpl_DyyHnWFszS472KupFkcyuBXaodkp,138,iad1,-1,2048,,prj_XoRs5TbncewutVR9iVi2Hyt3upav,,,01KDRB2SJJ5CKJQFTNB49BG72C,,-1
