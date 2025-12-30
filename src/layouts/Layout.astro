@@ -60,11 +60,10 @@ const {
 			// Explicitly force an event on /gracias to aid detection
 			if (window.location.pathname.includes("/gracias")) {
 				console.log(
-					"FluxMax: Detectada visita a /gracias. Enviando evento de conversión...",
+					"FluxMax: Detectada visita a /gracias. Enviando evento DE CONVERSIÓN...",
 				);
-				gtag("event", "page_view", {
+				gtag("event", "conversion", {
 					send_to: "AW-17834103657",
-					user_on_conversion_page: true,
 				});
 			}
 		</script>
