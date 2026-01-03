@@ -1,1 +1,0 @@
-import{g as r}from"./index.CB87Sc6I.js";import{S as t}from"./ScrollTrigger.Cv03IO65.js";r.registerPlugin(t);const a=r.timeline({scrollTrigger:{trigger:"#value-prop",start:"top 75%"}});a.to(".value-header",{opacity:1,duration:.5}).to(".value-card",{opacity:1,y:0,duration:.6,stagger:.15,ease:"back.out(1.2)"},"-=0.2");
