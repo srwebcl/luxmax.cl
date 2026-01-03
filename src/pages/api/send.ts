@@ -108,7 +108,7 @@ export const POST: APIRoute = async ({ request }) => {
 
             <p style="font-size: 14px; color: #94a3b8;">Si es una urgencia, puedes llamarnos directamente.</p>
             
-            <a href="tel:+56967140558" style="display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 50px; font-weight: bold; margin-top: 10px;">Llamar Ahora</a>
+            <a href="tel:+56982539614" style="display: inline-block; background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 50px; font-weight: bold; margin-top: 10px;">Llamar Ahora</a>
           </div>
         </div>
       `,
