@@ -87,44 +87,48 @@
     toggleBtn?.addEventListener("click", () => {
         isOpen = !isOpen;
         if (isOpen) {
-            menu?.classList.remove(
-                "translate-y-10",
-                "opacity-0",
-                "pointer-events-none",
-            );
-            menu?.classList.add(
-                "translate-y-0",
-                "opacity-100",
-                "pointer-events-auto",
-            );
+            if (menu) {
+                menu.classList.remove(
+                    "translate-y-10",
+                    "opacity-0",
+                    "pointer-events-none",
+                );
+                menu.classList.add(
+                    "translate-y-0",
+                    "opacity-100",
+                    "pointer-events-auto",
+                );
 
-            // Stagger reveal menu items
-            gsap.fromTo(
-                menu?.children,
-                { y: 20, opacity: 0 },
-                {
-                    y: 0,
-                    opacity: 1,
-                    duration: 0.4,
-                    stagger: 0.1,
-                    ease: "back.out",
-                },
-            );
+                // Stagger reveal menu items
+                gsap.fromTo(
+                    menu.children,
+                    { y: 20, opacity: 0 },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.4,
+                        stagger: 0.1,
+                        ease: "back.out",
+                    },
+                );
+            }
 
             // Stop pulse when open
             gsap.killTweensOf(toggleBtn);
             gsap.to(toggleBtn, { scale: 1, rotation: 45, duration: 0.3 });
         } else {
-            menu?.classList.add(
-                "translate-y-10",
-                "opacity-0",
-                "pointer-events-none",
-            );
-            menu?.classList.remove(
-                "translate-y-0",
-                "opacity-100",
-                "pointer-events-auto",
-            );
+            if (menu) {
+                menu.classList.add(
+                    "translate-y-10",
+                    "opacity-0",
+                    "pointer-events-none",
+                );
+                menu.classList.remove(
+                    "translate-y-0",
+                    "opacity-100",
+                    "pointer-events-auto",
+                );
+            }
 
             // Restart pulse
             gsap.to(toggleBtn, { rotation: 0, duration: 0.3 });
